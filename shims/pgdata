@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'fileutils'
+
+DIR='/Users/peterhickman/pg/pgdata9.6/backups'
+
+def list
+  puts "==> List backups available in #{DIR}"
+
+  files = Dir["#{DIR}/*.backup"].sort.map { |f| File.basename f }
+
+  if files.any?
+    files.each do |file|
+      puts "    #{file}"
+    end
+  else
+    puts '    There are no backups available'
+  end
+end
+
+def put(file)
+  if File.exist?(file)
+    FileUtils.cp(file, "#{DIR}/")
+    puts "Copied #{File.basename file} to #{DIR}/"
+  else
+    puts "Unknown file [#{file}]"
+  end
+end
+
+def get(file, dest)
+  name = File.basename file
+
+  file = "#{DIR}/#{name}"
+
+  unless File.exist?(file)
+    puts "The file #{name} does not exist in #{DIR}"
+    return
+  end
+
+  if dest.empty?
+    puts "No destination given"
+    return
+  end
+
+  FileUtils.cp(file, dest)
+  puts "Copied #{name} to #{dest}"
+end
+
+def del(file)
+  name = File.basename file
+
+  file = "#{DIR}/#{name}"
+
+  unless File.exist?(file)
+    puts "The file #{name} does not exist in #{DIR}"
+    return
+  end
+
+  FileUtils.rm(file)
+  puts "Removed #{name} from #{DIR}"
+end
+
+def usage(message = nil)
+  if message
+    puts message
+    puts
+  end
+
+  puts "pgdata list                  - List all the files in #{DIR}"
+  puts "pgdata put <filename>        - Copy <filename> into #{DIR}"
+  puts "pgdata get <filename> <dest> - Copy <filename> from #{DIR} to <dest>"
+  puts "pgdata del <filename>        - Remove <filename> from #{DIR}"
+end
+
+cmd = ARGV.shift.to_s
+
+case cmd
+when ''
+  usage
+when 'list'
+  list
+when 'put'
+  file = ARGV.shift
+  put(file)
+when 'get'
+  file = ARGV.shift
+  dest = ARGV.shift
+  get(file, dest)
+when 'del'
+  file = ARGV.shift
+  del(file)
+else
+  usage "Unknown command [#{cmd}]"
+end
+

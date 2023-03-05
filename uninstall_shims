@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
+for SHIM in shims/*
+do
+  NAME=`basename ${SHIM}`
+
+  TARGET=/usr/local/bin/${NAME}
+
+  echo "Removing ${TARGET}"
+  [ -e ${TARGET} ] && rm -f ${TARGET}
+done

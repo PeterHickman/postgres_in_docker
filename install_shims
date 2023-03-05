@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
+for SHIM in shims/*
+do
+  NAME=`basename ${SHIM}`
+
+  echo "Installing ${NAME} to /usr/local/bin/${NAME}"
+
+  install -g '0' -m 0755 -o '0' ${SHIM} /usr/local/bin/${NAME}
+done
