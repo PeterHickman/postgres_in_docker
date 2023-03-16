@@ -3,7 +3,7 @@
 
 require 'fileutils'
 
-DIR='/Users/peterhickman/pg/pgdata9.6/backups'
+DIR='/Users/peterhickman/pg/backups'
 
 def list
   puts "==> List backups available in #{DIR}"
