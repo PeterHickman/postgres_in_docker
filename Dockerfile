@@ -9,7 +9,7 @@ EXPOSE 5432:5432
 
 # Somewhere to put files so that they can be accessed from inside
 # the container for the likes of pg_dump and pg_restore
-#VOLUME $(pwd)/pgdata9.6/backups:/backups:rw
+#VOLUME $(pwd)/backups:/backups:rw
 
 #RESTART unless-stopped
 
